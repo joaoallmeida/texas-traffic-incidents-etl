@@ -153,24 +153,28 @@ def test_suite(df_validator:gx.validator.validator.Validator) -> gx.validator.va
 
 ############################################
 
-context_root_dir = "./great_expectations/"
-asset_name='traffic_incident_dataframe'
-source_name='spark_datasource'
-suite_name="expectation_suite_traffic_incident"
-site_name="traffic_incident_site"
-checkpoint_name="my-checkpoint"
+def validated():
+  context_root_dir = "./great_expectations/"
+  asset_name='traffic_incident_dataframe'
+  source_name='spark_datasource'
+  suite_name="expectation_suite_traffic_incident"
+  site_name="traffic_incident_site"
+  checkpoint_name="my-checkpoint"
 
-context = gx_config(context_root_dir)
-validator, runtime_batch_request = gx_validator( context, asset_name, source_name, suite_name)
+  context = gx_config(context_root_dir)
+  validator, runtime_batch_request = gx_validator( context, asset_name, source_name, suite_name)
 
-df_validator = test_suite(validator)
-checkpoint_result = gx_checkpoint( runtime_batch_request, context, checkpoint_name, suite_name)
+  df_validator = test_suite(validator)
+  checkpoint_result = gx_checkpoint( runtime_batch_request, context, checkpoint_name, suite_name)
 
-context.build_data_docs(site_names=site_name)
+  context.build_data_docs(site_names=site_name)
 
-validation_result = list(checkpoint_result.run_results.items())[0][1]["validation_result"]
+  validation_result = list(checkpoint_result.run_results.items())[0][1]["validation_result"]
 
-if not validation_result['success']:
-  failed_result = [a for a in validation_result['results'] if a['success'] is not True]
-  print(failed_result)
-  raise AirflowException('Validation of the source data loading is not successful')
+  if not validation_result['success']:
+    failed_result = [a for a in validation_result['results'] if a['success'] is not True]
+    print(failed_result)
+    raise AirflowException('Validation of the source data loading is not successful')
+  
+if __name__=="__main__":
+  validated()

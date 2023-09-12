@@ -7,14 +7,14 @@ import pyspark.sql.types as t
 
 BUCKET= Variable.get('bucket')
 
-spark = (SparkSession 
-            .builder 
-            .appName("myApp") 
-            .master("spark://spark-incidents:7077")
-            .getOrCreate()
-)   
-
-def refined_job(spark:SparkSession):
+def refined_job():
+       
+    spark = (SparkSession 
+                .builder 
+                .appName("myApp") 
+                .master("spark://spark-incidents:7077")
+                .getOrCreate()
+    )   
 
     df = spark.read.format('json').load(f's3a://{BUCKET}/raw/{datetime.now().strftime("%Y%m%d")}/incidents.json')
 
@@ -40,6 +40,7 @@ def refined_job(spark:SparkSession):
         .withColumn('traffic_report_status', f.when(f.col('traffic_report_status').isNull(),'Undefine').otherwise(f.col('traffic_report_status')) )
         .withColumn('latitude', f.when(f.col('latitude').isNull(),0).otherwise(f.col('latitude')) )
         .withColumn('longitude', f.when(f.col('longitude').isNull(),0).otherwise(f.col('longitude')) )
+        # .withColumn('id', f.monotonically_increasing_id())
     )
 
     df = df.select("traffic_report_id","published_date","issue_reported","latitude", "longitude","address", "traffic_report_status", "traffic_report_status_date_time", "year", "month")

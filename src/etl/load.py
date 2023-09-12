@@ -4,9 +4,9 @@ from datetime import datetime
 
 import clickhouse_connect as ch
 
-HOST = Variable.get('clickhouse_host')
 
 def ch_client():
+    HOST = Variable.get('clickhouse_host')
 
     client = ch.get_client(
         host=HOST
@@ -17,28 +17,12 @@ def ch_client():
 
     return client
 
-def load(spark:SparkSession):
+def load():
 
     BUCKET= Variable.get('bucket')
+    TABLE_NAME = 'incidents.traffic_incidents'
 
-    database_qry = "CREATE DATABASE IF NOT EXISTS incidents"
-    select_qry = "SELECT COUNT(*) FROM incidents.traffic"
-    create_qry = """
-        CREATE TABLE incidents.traffic
-        (
-            traffic_report_id String ,
-            published_date DateTime,
-            issue_reported String,
-            latitude Float64,
-            longitude Float64,
-            address String,
-            traffic_report_status String,
-            traffic_report_status_date_time DateTime,
-            year UInt32,
-            month String
-        )
-        ENGINE = MergeTree()
-        PRIMARY KEY (traffic_report_id)"""
+    select_qry = f"SELECT COUNT(*) FROM {TABLE_NAME}"
     
     spark = (SparkSession 
                 .builder 
@@ -47,27 +31,24 @@ def load(spark:SparkSession):
                 .getOrCreate()
     )
 
-    client = ch_client()
 
     # Create Database
-    client.command("DROP DATABASE IF EXISTS incidents")
-    client.command(database_qry)
-
-    # Create Table
     try:
-        client.command('SHOW TABLE incidents.traffic')
+        client = ch_client()
+
+        with open('etl/SQL/ddl.sql','r') as file:
+            statemant = file.read().split(';')
+            for query in statemant:
+                if len(query) > 0:
+                    client.command(query)
+
     except Exception as e:
-        if "doesn't exist" in str(e):
-            client.command(create_qry)
-        else:
-            raise e
+        raise e
         
     df = spark.read.parquet(f's3a://{BUCKET}/refined/{datetime.now().strftime("%Y%m%d")}/incidents.parquet')
-    print(df.columns)
-
     data = [list(row) for row in df.collect()]
 
-    ic = client.create_insert_context('incidents.traffic', data=data)
+    ic = client.create_insert_context(TABLE_NAME, data=data)
     client.insert(context=ic)
 
     result = client.command(select_qry)
