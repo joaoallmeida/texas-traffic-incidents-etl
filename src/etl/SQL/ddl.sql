@@ -1,4 +1,4 @@
--- DROP DATABASE IF EXISTS incidents
+DROP DATABASE IF EXISTS incidents
 -- DROP TABLE IF EXISTS incidents.traffic_incidents
 -- DROP TABLE IF EXISTS incidents.traffic_incidents_report
 
@@ -17,11 +17,12 @@ CREATE TABLE IF NOT EXISTS incidents.traffic_incidents
     year UInt32,
     month String
 ) 
-ENGINE = ReplacingMergeTree
+ENGINE = MergeTree()
 ORDER BY traffic_report_id;
 
 CREATE TABLE IF NOT EXISTS incidents.traffic_incidents_report (
-    report_id UInt64,
+    -- report_id UInt64,
+    report_id String,
     published_date DateTime,
     issue_reported String,
     latitude Float64,
@@ -32,13 +33,14 @@ CREATE TABLE IF NOT EXISTS incidents.traffic_incidents_report (
     year UInt32,
     month String
 ) 
-ENGINE = ReplacingMergeTree(report_id) 
-PRIMARY KEY report_id;
+ENGINE = ReplacingMergeTree(published_date) 
+ORDER BY report_id;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS incidents.report_incidents TO incidents.traffic_incidents_report 
 AS 
     SELECT 
-        reinterpretAsInt64(splitByString('_', traffic_report_id)[1]) AS report_id,
+        -- reinterpretAsInt64(splitByString('_', traffic_report_id)[1]) AS report_id,
+        traffic_report_id as report_id,
         published_date,
         issue_reported,
         latitude,
@@ -49,3 +51,4 @@ AS
         year,
         month
     FROM incidents.traffic_incidents
+    
