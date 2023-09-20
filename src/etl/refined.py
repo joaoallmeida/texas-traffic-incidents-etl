@@ -40,7 +40,6 @@ def refined_job():
         .withColumn('traffic_report_status', f.when(f.col('traffic_report_status').isNull(),'Undefine').otherwise(f.col('traffic_report_status')) )
         .withColumn('latitude', f.when(f.col('latitude').isNull(),0).otherwise(f.col('latitude')) )
         .withColumn('longitude', f.when(f.col('longitude').isNull(),0).otherwise(f.col('longitude')) )
-        # .withColumn('id', f.monotonically_increasing_id())
     )
 
     df = df.select("traffic_report_id","published_date","issue_reported","latitude", "longitude","address", "traffic_report_status", "traffic_report_status_date_time", "year", "month")

@@ -20,9 +20,10 @@ def ch_client():
 def load():
 
     BUCKET= Variable.get('bucket')
-    TABLE_NAME = 'incidents.traffic_incidents'
+    TABLE_NAME = 'incidents.traffic_incidents_report'
 
     select_qry = f"SELECT COUNT(*) FROM {TABLE_NAME}"
+    check_db = "SELECT COUNT(*) FROM system.databases WHERE name = 'incidents';"
     
     spark = (SparkSession 
                 .builder 
@@ -35,11 +36,12 @@ def load():
     # Create Database
     try:
         client = ch_client()
-
+        
         with open('etl/SQL/ddl.sql','r') as file:
             statemant = file.read().split(';')
             for query in statemant:
                 if len(query) > 0:
+                    print(query)
                     client.command(query)
 
     except Exception as e:
