@@ -9,12 +9,12 @@ The following tools were used for this project:
 - Airflow
 - Python
 - Clickhouse
-- GreatExpertation
+- Great Expectation
 - Apache Spark
 - Minio
 - Docker
 - Metabase
 
-This pipeline is for batch processing, the idea is to run it once a day and create an analysis using a dashboard for visual illustration.
+This pipeline is for batch processing, the idea is to run it once a day and create an analysis using a dashboard for visual illustration
 
 ---
