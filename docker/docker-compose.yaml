@@ -2,7 +2,7 @@ version: '3'
 
 x-airflow-common:
   &airflow-common
-  image: airflow-java:0.0.1
+  image: 'my-airflow:v0.0.1'
   volumes:
     - ${HOME_DIR}/dags:/opt/airflow/dags
     - ${HOME_DIR}/logs:/opt/airflow/logs
@@ -178,8 +178,17 @@ services:
     volumes:
       - ${HOME_DIR}:/sources
 
+  metabase:
+    image: 'my-metabase:v0.0.1'
+    container_name: 'metabase-with-clickhouse'
+    ports:
+      - '3000:3000'
+    volumes:
+      - metabase_data:/metabase.db
+      
 volumes:
   postgres-db-volume-traffic:
   clickconfig:
   clicklog:
   minio_data:
+  metabase_data:

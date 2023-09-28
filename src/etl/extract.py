@@ -7,8 +7,8 @@ import logging
 import requests
 import json
 
-# URL_BASE = "https://data.austintexas.gov/resource/dx9v-zd7x.json?$limit=500000"
-URL_BASE = f"https://data.austintexas.gov/resource/dx9v-zd7x.json?$where=published_date>'{(datetime.now().date() - timedelta(days=1))}'"
+URL_BASE = "https://data.austintexas.gov/resource/dx9v-zd7x.json?$limit=500000"
+# URL_BASE = f"https://data.austintexas.gov/resource/dx9v-zd7x.json?$where=published_date>'{(datetime.now().date() - timedelta(days=1))}'"
 ACCESS_KEY = Variable.get('acces_key')
 SECRET_KEY = Variable.get('secret_key')
 ENDPOINT = "minio:4666"
