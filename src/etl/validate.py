@@ -105,10 +105,10 @@ def gx_checkpoint(runtime_batch_request:gx.core.batch.RuntimeBatchRequest ,conte
               "use_tls": False,
               "smtp_address": "smtp.gmail.com",
               "smtp_port": 587,
-              "sender_login": "joaoallmeida96@gmail.com",
-              "sender_password": "jzskjrrqatkopjrf",
-              "sender_alias": "joaoallmeida96@gmail.com",
-              "receiver_emails":"jaumalmeida@outlook.com"            
+              "sender_login": "SENDER EMAIL",
+              "sender_password": "EMAIL PASSWORD",
+              "sender_alias": "SENDER EMAIL",
+              "receiver_emails":"RECEIVERS EMAILS"            
               }
           }
       ],
