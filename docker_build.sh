@@ -5,9 +5,12 @@ cp requirements.txt docker/
 
 cd docker/
 
+echo "Setting environment variables"
+export HOME_DIR=`pwd`
+export AIRFLOW_UID=0
 export DOWNLOAD_URL="https://github.com/enqueue/metabase-clickhouse-driver/releases/download/1.2.1/clickhouse.metabase-driver.jar"
-echo "Downloading the driver from $DOWNLOAD_URL"
 
+echo "Downloading the driver from $DOWNLOAD_URL"=
 curl -L -o clickhouse.metabase-driver.jar $DOWNLOAD_URL
 
 echo "Building airflow image ..."

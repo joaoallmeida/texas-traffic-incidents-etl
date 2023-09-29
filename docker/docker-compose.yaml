@@ -4,10 +4,10 @@ x-airflow-common:
   &airflow-common
   image: 'my-airflow:v0.0.1'
   volumes:
-    - ${HOME_DIR}/dags:/opt/airflow/dags
-    - ${HOME_DIR}/logs:/opt/airflow/logs
-    - ${HOME_DIR}/etl:/opt/airflow/etl
-    - ${HOME_DIR}/great_expectations:/opt/airflow/great_expectations
+    - ${HOME_DIR}/src/dags:/opt/airflow/dags
+    - ${HOME_DIR}/src/logs:/opt/airflow/logs
+    - ${HOME_DIR}/src/etl:/opt/airflow/etl
+    - ${HOME_DIR}/src/great_expectations:/opt/airflow/great_expectations
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -176,7 +176,7 @@ services:
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
     user: "0:0"
     volumes:
-      - ${HOME_DIR}:/sources
+      - ${HOME_DIR}/src:/sources
 
   metabase:
     image: 'my-metabase:v0.0.1'
