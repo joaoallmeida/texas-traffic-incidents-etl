@@ -92,4 +92,5 @@ To see the validation document and the applied validation rules, simply enter th
 
 ---
 
-**Data Source: https://data.austintexas.gov/Transportation-and-Mobility/Real-Time-Traffic-Incident-Reports/dx9v-zd7x**
+**Data source:** https://data.austintexas.gov/Transportation-and-Mobility/Real-Time-Traffic-Incident-Reports/dx9v-zd7x<br>
+**Created at:** 29/09/2023
